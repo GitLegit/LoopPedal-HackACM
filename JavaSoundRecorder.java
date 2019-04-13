@@ -29,6 +29,7 @@ public class JavaSoundRecorder extends JFrame {
       this.setTitle("Test Sound Clip");
       this.setSize(300, 200);
       this.setVisible(true);
+      this.addKeyListener(new MyListener());
     }
 
     /**
@@ -136,4 +137,20 @@ public class JavaSoundRecorder extends JFrame {
          e.printStackTrace();
       }
     }
+    /*
+    *   nested class for pressing keys.
+    */
+    class MyListener implements KeyListener {
+		public void keyPressed(KeyEvent e) {
+			System.out.println("key pressed");
+		}
+		public void keyReleased(KeyEvent e){
+
+		}
+		public void keyTyped(KeyEvent e){
+
+		}
+	}
+
+
 }
