@@ -14,7 +14,7 @@ import java.awt.event.*;
 
 public class JavaSoundRecorder extends JFrame {
   // record duration, in milliseconds
-  static final long RECORD_TIME = 2000;  // 1 minute
+  static final long RECORD_TIME = 5000;  // 1 minute
 
 
   // format of audio file
@@ -71,14 +71,14 @@ public class JavaSoundRecorder extends JFrame {
       System.out.println("Start recording...");
 
       // start recording
-      // AudioSystem.write(ais, fileType, wavFile);
+      AudioSystem.write(ais, fileType, wavFile);
       System.out.println("writing shit");
 
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
-    }/* catch (IOException ioe) {
+    } catch (IOException ioe) {
       ioe.printStackTrace();
-    }*/
+    }
   }
 
   /**
@@ -112,7 +112,12 @@ public class JavaSoundRecorder extends JFrame {
             }
             // start recording
             System.out.println("record");
-            sleepyThread.start(wavFile);
+            Thread writeThread = new Thread(new Runnable() {
+              public void run() {
+                recorder.start(wavFile);
+              }
+            });
+            writeThread.start();
             System.out.println("do other things");
             try {
               System.out.println("sleep");
