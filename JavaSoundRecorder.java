@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.event.*;
 
 
-
 /**
 * CREDITS:
 * www.codejava.net - helped with sound recording implementation
@@ -38,8 +37,8 @@ public class JavaSoundRecorder extends JFrame {
   */
   AudioFormat getAudioFormat() {
     float sampleRate = 16000;
-    int sampleSizeInBits = 8;
-    int channels = 2;
+    int sampleSizeInBits = 16;
+    int channels = 1;
     boolean signed = true;
     boolean bigEndian = true;
     AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
@@ -72,7 +71,7 @@ public class JavaSoundRecorder extends JFrame {
 
       // start recording
       AudioSystem.write(ais, fileType, wavFile);
-      System.out.println("writing shit");
+      System.out.println("writing shit\n\n\n\n");
 
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
@@ -98,42 +97,42 @@ public class JavaSoundRecorder extends JFrame {
 
 
 
-      Thread sleepyThread = new Thread(new Runnable() {
-        public void run() {
-          int i = 0;
-          while (true){
-            // path of the wav file
-            String filename = "inProgressSound/loop_"+i+".wav";
-            File wavFile = new File(filename);
-            try {
-              wavFile.createNewFile();
-            } catch (IOException ex){
-              ex.printStackTrace();
-            }
-            // start recording
-            System.out.println("record");
-            Thread writeThread = new Thread(new Runnable() {
-              public void run() {
-                recorder.start(wavFile);
-              }
-            });
-            writeThread.start();
-            System.out.println("do other things");
-            try {
-              System.out.println("sleep");
-              Thread.sleep(RECORD_TIME);
-              System.out.println("wake the hell up :)");
-            } catch (InterruptedException ex){
-              ex.printStackTrace();
-            }
-            System.out.println("stop recording");
-            recorder.finish();
-            // recorder.playPreviousLoops();
-            i++;
+    Thread sleepyThread = new Thread(new Runnable() {
+      public void run() {
+        int i = 0;
+        while (true){
+          // path of the wav file
+          String filename = "inProgressSound/loop_"+i+".wav";
+          File wavFile = new File(filename);
+          try {
+            wavFile.createNewFile();
+          } catch (IOException ex){
+            ex.printStackTrace();
           }
+          // start recording
+          System.out.println("record");
+          Thread writeThread = new Thread(new Runnable() {
+            public void run() {
+              recorder.start(wavFile);
+            }
+          });
+          writeThread.start();
+          System.out.println("do other things");
+          try {
+            System.out.println("sleep");
+            Thread.sleep(RECORD_TIME);
+            System.out.println("wake the hell up :)");
+          } catch (InterruptedException ex){
+            ex.printStackTrace();
+          }
+          System.out.println("stop recording");
+          recorder.finish();
+          recorder.playPreviousLoops();
+          i++;
         }
-      });
-      sleepyThread.start();
+      }
+    });
+    sleepyThread.start();
 
 
 
@@ -142,12 +141,14 @@ public class JavaSoundRecorder extends JFrame {
   private void playPreviousLoops(){
     int i = 0;
     String filename = "inProgressSound/loop_"+i+".wav";
+
     File wavFile = new File(filename);
-    while (wavFile != null){
+    while (wavFile.exists()){
       play(filename);
       i++;
       filename = "inProgressSound/loop_"+i+".wav";
-      wavFile = new File("inProgressSound/loop_"+i+".wav");
+      System.out.println(filename);
+      wavFile = new File(filename);
     }
 
   }
@@ -156,6 +157,7 @@ public class JavaSoundRecorder extends JFrame {
     try {
       // Open an audio input stream.
       URL url = this.getClass().getClassLoader().getResource(filename);
+      System.out.println(url);
       AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
       // Get a sound clip resource.
       Clip clip = AudioSystem.getClip();
@@ -170,20 +172,55 @@ public class JavaSoundRecorder extends JFrame {
       e.printStackTrace();
     }
   }
-  /*
-  *   nested class for pressing keys.
-  */
-  class MyListener implements KeyListener {
-    public void keyPressed(KeyEvent e) {
-      System.out.println("key pressed");
-    }
-    public void keyReleased(KeyEvent e){
 
-    }
-    public void keyTyped(KeyEvent e){
+  private
 
+  private File append(String wavFile1, String wavFile2){
+    File newWav;
+    try {
+      AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File(wavFile1));
+      AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
+
+      AudioInputStream appendedFiles =
+      new AudioInputStream(
+      new SequenceInputStream(clip1, clip2),
+      clip1.getFormat(),
+      clip1.getFrameLength() + clip2.getFrameLength());
+
+      // new appended file
+      newWav = new File(wavFile1+"+"+wavFile2.substring(16));
+      try {
+        newWav.createNewFile();
+      } catch (IOException ex){
+        ex.printStackTrace();
+      }
+
+      AudioSystem.write(appendedFiles,
+      AudioFileFormat.Type.WAVE,
+      newWav);
+
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+
+    return newWav;
   }
+}
+
+/*
+*   nested class for pressing keys.
+*/
+class MyListener implements KeyListener {
+  public void keyPressed(KeyEvent e) {
+    System.out.println("key pressed");
+  }
+  public void keyReleased(KeyEvent e){
+
+  }
+  public void keyTyped(KeyEvent e){
+
+  }
+}
 
 
 }
