@@ -71,7 +71,7 @@ public class JavaSoundRecorder extends JFrame {
 
       // start recording
       AudioSystem.write(ais, fileType, wavFile);
-      System.out.println("writing shit\n\n\n\n");
+      System.out.println("writing stuff\n\n\n\n");
 
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
@@ -173,46 +173,46 @@ public class JavaSoundRecorder extends JFrame {
     }
   }
 
-  private
-
-  private File append(String wavFile1, String wavFile2){
-    File newWav;
-    try {
-      AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File(wavFile1));
-      AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
-
-      AudioInputStream appendedFiles =
-      new AudioInputStream(
-      new SequenceInputStream(clip1, clip2),
-      clip1.getFormat(),
-      clip1.getFrameLength() + clip2.getFrameLength());
-
-      // new appended file
-      newWav = new File(wavFile1+"+"+wavFile2.substring(16));
-      try {
-        newWav.createNewFile();
-      } catch (IOException ex){
-        ex.printStackTrace();
-      }
-
-      AudioSystem.write(appendedFiles,
-      AudioFileFormat.Type.WAVE,
-      newWav);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return newWav;
-  }
-}
+//
+//
+//   private File append(String wavFile1, String wavFile2){
+//     File newWav;
+//     try {
+//       AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File(wavFile1));
+//       AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
+//
+//       AudioInputStream appendedFiles =
+//       new AudioInputStream(
+//       new SequenceInputStream(clip1, clip2),
+//       clip1.getFormat(),
+//       clip1.getFrameLength() + clip2.getFrameLength());
+//
+//       // new appended file
+//       newWav = new File(wavFile1+"+"+wavFile2.substring(16));
+//       try {
+//         newWav.createNewFile();
+//       } catch (IOException ex){
+//         ex.printStackTrace();
+//       }
+//
+//       AudioSystem.write(appendedFiles,
+//       AudioFileFormat.Type.WAVE,
+//       newWav);
+//
+//     } catch (Exception e) {
+//       e.printStackTrace();
+//     }
+//
+//     return newWav;
+//   }
+// }
 
 /*
 *   nested class for pressing keys.
 */
 class MyListener implements KeyListener {
   public void keyPressed(KeyEvent e) {
-    System.out.println("key pressed");
+    System.exit(0);
   }
   public void keyReleased(KeyEvent e){
 
@@ -221,6 +221,4 @@ class MyListener implements KeyListener {
 
   }
 }
-
-
 }
